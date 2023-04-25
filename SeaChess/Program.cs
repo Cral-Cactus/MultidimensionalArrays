@@ -46,7 +46,7 @@ namespace SeaChess
                 Console.WriteLine("The winner is: " + board[0, 2]);
                 return;
             }
-
+            
             Console.WriteLine("There is no winner");
         }
     }
