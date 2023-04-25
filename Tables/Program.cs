@@ -1,71 +1,74 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace Tables
 {
-    internal class Program
+    class Tables
     {
         static void Main()
         {
-            int n = int.Parse(Console.ReadLine());
-            int[][][] sheets = new int[n][][];
-            for (int i = 0; i < n; i++)
+            int sheets = int.Parse(Console.ReadLine());
+            int[][,] document = new int[sheets][,];
+
+            for (int i = 0; i < sheets; i++)
             {
-                int[] size = Console.ReadLine().Split().Select(int.Parse).ToArray();
-                int rows = size[0];
-                int cols = size[1];
-                sheets[i] = new int[rows][];
+
+                int[] lens = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+                int rows = lens[0];
+                int cols = lens[1];
+
+                document[i] = new int[rows, cols];
+
                 for (int row = 0; row < rows; row++)
                 {
-                    int[] values = Console.ReadLine().Split().Select(int.Parse).ToArray();
-                    sheets[i][row] = values;
-                }
-            }
-            double[] sheetAverages = new double[n];
-            for (int i = 0; i < n; i++)
-            {
-                int min = sheets[i][0][0];
-                int max = sheets[i][0][0];
-                int sum = 0;
-
-                for (int row = 0; row < sheets[i].Length; row++)
-                {
-                    for (int col = 0; col < sheets[i][row].Length; col++)
+                    int[] rowArray = Console.ReadLine().Split(' ').Select(int.Parse).ToArray();
+                    for (int col = 0; col < cols; col++)
                     {
-                        int value = sheets[i][row][col];
-
-                        if (value < min)
-                        {
-                            min = value;
-                        }
-
-                        if (value > max)
-                        {
-                            max = value;
-                        }
-
-                        sum += value;
+                        document[i][row, col] = rowArray[col];
                     }
                 }
-                double average = (double)sum / (sheets[i].Length * sheets[i][0].Length);
-                sheetAverages[i] = average;
-                Console.WriteLine($"{min} {max} {Math.Round(average,2)}");
             }
 
-            double documentAverage = sheetAverages.Average();
-            for (int i = 0; i < sheetAverages.Length; i++)
+            double globalAvg = 0, localAvg = 0;
+            int max = 0, min = 0;
+
+            Console.Clear();
+
+            for (int i = 0; i < sheets; i++)
             {
-                if (sheetAverages[i] > documentAverage)
+                localAvg = 0;
+                max = min = document[i][0, 0];
+
+                for (int j = 0; j < document[i].GetLength(0); j++)
                 {
-                    Console.Write("2 ");
+                    for (int q = 0; q < document[i].GetLength(1); q++)
+                    {
+                        localAvg += document[i][j, q];
+
+                        if (max < document[i][j, q]) max = document[i][j, q];
+                        if (min > document[i][j, q]) min = document[i][j, q];
+                    }
                 }
-                else
+                localAvg = localAvg / (document[i].GetLength(0) * document[i].GetLength(1));
+                Console.WriteLine($"{min} {max} {Math.Round(localAvg, 2)}");
+
+                globalAvg += localAvg;
+            }
+            globalAvg /= sheets;
+
+            for (int i = 0; i < sheets; i++)
+            {
+                int count = 0;
+                for (int j = 0; j < document[i].GetLength(0); j++)
                 {
-                    Console.Write("4 ");
+                    for (int q = 0; q < document[i].GetLength(1); q++)
+                    {
+                        if (document[i][j, q] > globalAvg) count++;
+                    }
                 }
+                Console.Write($"{count} ");
             }
             Console.WriteLine();
-
         }
     }
 }
