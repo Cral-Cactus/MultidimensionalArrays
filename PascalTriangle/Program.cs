@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace PascalTriangle
 {
@@ -14,6 +14,7 @@ namespace PascalTriangle
                 triangle[row] = new int[row + 1];
                 triangle[row][0] = 1;
                 triangle[row][row] = 1;
+
                 for (int col = 1; col < row; col++)
                 {
                     triangle[row][col] = triangle[row - 1][col - 1] + triangle[row - 1][col];
@@ -32,7 +33,6 @@ namespace PascalTriangle
                 }
                 Console.WriteLine();
             }
-
         }
     }
 }
